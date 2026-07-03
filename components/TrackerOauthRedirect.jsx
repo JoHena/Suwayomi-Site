@@ -1,0 +1,42 @@
+'use client';
+
+import { useEffect, useState } from "react";
+
+function parseParams() {
+    let query = window.location.search;
+    if (query.length === 0) {
+        // anilist passes hash instead of query string
+        query = window.location.hash;
+        query = query.replace("#", "?");
+    }
+
+    if (query.length === 0) {
+        throw new Error("No query string found");
+    }
+
+    const urlParams = new URLSearchParams(query);
+
+    const { redirectUrl, clientName } = JSON.parse(urlParams.get("state"));
+
+    return { redirectUrl, clientName, query };
+}
+
+export function TrackerOauthRedirect() {
+    const [clientName, setClientName] = useState('Suwayomi client');
+
+    useEffect(() => {
+        try {
+            const { redirectUrl, clientName, query } = parseParams();
+
+            if (clientName !== undefined) setClientName(clientName);
+
+            window.location.href = `${redirectUrl}${query}`;
+        } catch (e) {
+            console.error(e);
+        }
+    }, []);
+
+    return (
+        <>Your browser will open a link to your {clientName}.</>
+    );
+}
