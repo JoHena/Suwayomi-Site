@@ -1,0 +1,37 @@
+---
+title: よくある質問
+---
+
+# よくある質問
+
+### Suwayomi とは何ですか?
+
+Suwayomi-Server は、[Mihon (Tachiyomi)](https://mihon.app/) 用に作られた拡張機能を実行できる、無料でオープンソースのマンガリーダーサーバーです。Mihon (Tachiyomi) のフォークではなく、独立した互換プロジェクトで、ご自身のコンピューターや管理下のサーバー上で動作し、あらゆる Mihon (Tachiyomi) の拡張機能がそのまま利用できます。
+
+### 別のクライアントアプリをインストールする必要がありますか?
+
+必ずしも必要ではありません。Suwayomi-Server を直接ダウンロードすると、すでに [Suwayomi-WebUI](https://github.com/Suwayomi/Suwayomi-WebUI) が同梱されているため、すぐに読み始めることができます。ネイティブのデスクトップ/モバイルアプリなど、別のインターフェースを使いたい場合は、一覧が載っている[クライアント](/ja/docs/clients)を参照してください。
+
+### マンガのソース/拡張機能はどこで入手できますか?
+
+デフォルトで同梱されている拡張機能はありません。Mihon (Tachiyomi) 互換の拡張機能リポジトリを Suwayomi-Server に指定すると、そこからソースがインストールされます。手順は[拡張機能の入手](/ja/docs/extensions)を参照してください。
+
+### ライブラリ/設定/ログはどこに保存されますか?
+
+すべて Suwayomi のデータディレクトリに保存され、OS によって場所が異なります。正確なパスは[データディレクトリ](/ja/docs/data-directory)を、移動したい場合は[設定](/ja/docs/configuration)を参照してください。
+
+### Suwayomi を Mihon (Tachiyomi) と併用できますか?
+
+はい。Mihon (Tachiyomi)(およびそのフォーク)内に `Suwayomi` 拡張機能をインストールすると、Suwayomi のライブラリを閲覧できます。また Suwayomi トラッカーを有効にすると、両者の間で読書進捗を同期できます。
+
+### 別のデバイスやインターネット経由で Suwayomi-Server にアクセスできますか?
+
+はい — Suwayomi-Server はリモートでの利用を想定して設計されています。いずれかの[クライアント](/ja/docs/clients)から接続するか、サーバーのアドレスを指定してブラウザで同梱の WebUI を開いてください。ローカルネットワークの外に公開するには、ご自身でネットワーク/ポートフォワーディング/リバースプロキシの設定を行う必要があり、その場合は[設定](/ja/docs/configuration)で認証を有効にすることを強くお勧めします。
+
+### Suwayomi は Tachiyomi/Mihon やマンガサイトと提携していますか?
+
+いいえ。Suwayomi は Mihon (Tachiyomi) 互換のソフトウェアですが、独立して開発されており、拡張機能を通じてアクセスできるコンテンツ提供元とは提携していません。
+
+### うまく動作しません — どこでサポートを受けられますか?
+
+まずは[トラブルシューティング](/ja/docs/troubleshooting)をご覧ください。データベースの破損、拡張機能のタイムアウト、Cloudflare の認証、完全リセットの手順など、よくある問題を網羅しています。それでも解決しない場合は、[Suwayomi Discord サーバー](https://discord.gg/DDZdqZWaHA)で質問するか、[GitHub の issue 一覧](https://github.com/Suwayomi/Suwayomi-Server/issues)を確認してください — その際はデータディレクトリ内のログを手元に用意しておいてください。

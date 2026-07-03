@@ -1,0 +1,95 @@
+---
+title: Fuente local
+---
+
+# Fuente local
+
+Sigue los pasos siguientes para crear manga local.
+
+1. Coloca el manga con la estructura correcta dentro del directorio `local`, ubicado en el [directorio de datos de Suwayomi](/es/docs/data-directory).
+2. Después podrás acceder al manga en la fuente **Local source**.
+
+Si añades más capítulos, tendrás que actualizar manualmente la lista de capítulos.
+
+Los formatos de capítulo compatibles son carpetas con imágenes dentro (como `.jpg`, `.png`, etc.), `ZIP`/`CBZ`, `RAR`/`CBR` y `EPUB`. Aun así, obtendrás mejor rendimiento con directorios y archivos `ZIP`/`CBZ`.
+
+**Nota:** aunque Suwayomi sí es compatible con capítulos comprimidos como **RAR** o **CBR**, los archivos **RAR** o **CBR** que usan el formato **RAR5** todavía no son compatibles.
+
+**Nota:** si los archivos **CBR** o **RAR** no funcionan, es posible que debas extraerlos y volver a comprimirlos en uno de los formatos compatibles.
+
+## Estructura de carpetas
+
+Suwayomi necesita una estructura de carpetas específica para procesar correctamente el manga local. El manga local se leerá desde la carpeta `local`. Cada manga debe tener una carpeta `Manga` y una carpeta `Chapter`. Las imágenes se colocan dentro de la carpeta del capítulo. Más abajo encontrarás información sobre los archivos comprimidos. Puedes tomar como referencia el siguiente ejemplo:
+
+```
+local/
+├── Manga title/
+│   ├── Chapter 01 - Prologue/
+│   │   ├── page01.png
+│   │   ├── page02.png
+│   │   ├── page03.png
+│   │   └── ...
+│   ├── Chapter 02 - A hero's journey/
+│   │   ├── 01.jpg
+│   │   ├── 02.jpg
+│   │   ├── 03.jpg
+│   │   └── ...
+│   └── cover.jpg
+└── Other Manga title/
+    ├── cover.jpg
+    ├── ch001/
+    │   ├── 01 - cover.jpg
+    │   ├── 02 - first page.jpeg
+    │   ├── 03 - second.jpg
+    │   └── ...
+    └── ch002/
+        ├── 001.jpg
+        ├── 002.jpg
+        ├── 003.jpg
+        └── ...
+```
+
+**Nota:** los nombres de capítulos y páginas deben ordenarse alfanuméricamente; usar prefijos numéricos con ceros a la izquierda suele ser la mejor opción.
+
+La ruta a la carpeta con las imágenes debe contener tanto el título del manga como el nombre del capítulo (como se ve arriba).
+
+## Archivos comprimidos
+
+Los archivos comprimidos como `ZIP`/`CBZ` son compatibles, pero no lo es la estructura de carpetas que contienen. Cualquier carpeta dentro del archivo se ignora. Debes colocar el archivo dentro de la carpeta `Manga`; su nombre pasará a ser el título del `Chapter`. Todas las imágenes dentro del archivo, sin importar la estructura de carpetas, se convertirán en las páginas de ese capítulo.
+
+```
+local/
+└── Manga title/
+    ├── ch1.zip
+    ├── ch2.zip
+    └── cover.jpg
+```
+
+## Avanzado
+
+### Editar los detalles del manga local
+
+Es posible añadir detalles al manga local. Igual que con el manga de otros catálogos, puedes añadir información como el autor, el artista, la descripción y las etiquetas de género.
+
+Para importar detalles junto con tu manga local, tienes que crear un archivo json. Puede tener cualquier nombre, pero debe colocarse dentro de la carpeta **Manga**. Un nombre habitual es `details.json`. Este archivo contendrá los detalles ampliados del manga en formato `JSON`. Puedes ver el ejemplo de abajo para saber cómo construir el archivo. Una vez colocado, la aplicación debería cargar los datos la primera vez que abras el manga, o puedes deslizar hacia abajo para actualizar los detalles.
+
+Puedes copiar el siguiente ejemplo y editar los detalles según sea necesario:
+```json
+{
+	"title": "Example Title",
+	"author": "Example Author",
+	"artist": "Example Artist",
+	"description": "Example Description",
+	"genre": ["genre 1", "genre 2", "etc"],
+	"status": "0",
+	"_status values": ["0 = Unknown", "1 = Ongoing", "2 = Completed", "3 = Licensed"]
+}
+```
+
+### Usar una imagen de portada personalizada
+
+También es posible usar una imagen personalizada como portada para cada manga local.
+
+Para hacerlo, solo necesitas colocar el archivo de imagen, que debe llamarse
+`cover.jpg`, en la raíz de la carpeta del manga. La aplicación usará entonces tu
+imagen personalizada en el listado de la fuente local.

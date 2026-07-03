@@ -1,0 +1,347 @@
+---
+title: Configuración
+---
+
+import { Callout } from 'nextra/components'
+
+# Configuración
+
+<Callout type="warning">
+  Este documento describe las opciones disponibles en la versión de vista previa. Consulta [v2.2.2100](https://github.com/Suwayomi/Suwayomi-Server/blob/v2.2.2100/docs/Configuring-Suwayomi%E2%80%90Server.md) para la versión estable actual
+</Callout>
+
+El archivo de configuración de Suwayomi-Server se llama `server.conf` y se encuentra dentro del [directorio de datos](/es/docs/data-directory).
+
+El archivo de configuración está escrito en HOCON. Google es tu amigo si quieres saber más.
+
+**Nota:** en el futuro podrían añadirse nuevas claves. Suwayomi generalmente intenta actualizar tu archivo de configuración de forma automática, pero algunas claves podrían necesitar actualizarse manualmente.
+
+## Solución de problemas
+
+### He estropeado mi archivo de configuración
+Suwayomi creará un archivo de configuración predeterminado cuando no exista ninguno; puedes eliminar `server.conf` para obtener una copia del archivo de configuración de referencia tras reiniciar.
+
+### Estoy ejecutando Suwayomi en un entorno headless (docker, NAS, VPS, etc.)
+- Configura `server.systemTrayEnabled` en false para evitar que Suwayomi intente crear un icono en la bandeja del sistema.
+- Configura `server.initialOpenInBrowserEnabled` en false para evitar que Suwayomi intente abrir un navegador al iniciarse.
+
+### El tamaño de mi directorio de datos/descargas de Suwayomi se está haciendo demasiado grande
+- Configura `server.downloadsPath` con la ruta deseada si solo necesitas cambiar dónde se almacenan las descargas. Tendrás que mover/eliminar las descargas existentes manualmente.
+- Configura la clave especial `server.rootDir` si necesitas que Suwayomi use una ruta de directorio de datos personalizada; consulta [esta sección](#sobrescribir-la-ruta-del-directorio-de-datos-de-suwayomi-server).
+
+## Opciones de configuración
+### Enlace de IP y puerto del servidor
+```conf
+server.ip = "0.0.0.0"
+server.port = 4567
+```
+- `server.ip` puede ser una IP o un nombre de dominio.
+
+### Proxy Socks5
+```
+server.socksProxyEnabled = false
+server.socksProxyVersion = 5 # 4 or 5
+server.socksProxyHost = ""
+server.socksProxyPort = ""
+server.socksProxyUsername = ""
+server.socksProxyPassword = ""
+```
+Esta sección indica a Suwayomi que se conecte a la red a través de un servidor proxy.
+
+Un ejemplo de configuración podría ser:
+```
+server.socksProxyEnabled = true
+server.socksProxyHost = "yourproxyhost.com"
+server.socksProxyPort = "8080"
+```
+
+### webUI
+```
+server.webUIEnabled = true
+server.initialOpenInBrowserEnabled = true
+server.webUIInterface = "browser" # "browser" or "electron"
+server.electronPath = ""
+server.webUIFlavor = "WebUI" # "WebUI" or "Custom"
+server.webUIChannel = preview # "BUNDLED" or "STABLE" or "PREVIEW"
+server.webUIUpdateCheckInterval = 23
+server.webUISubpath = ""
+```
+- `server.webUIEnabled` controla si Suwayomi servirá `Suwayomi-WebUI` y si lo descarga/actualiza al iniciarse.
+- `server.initialOpenInBrowserEnabled` controla si Suwayomi intentará abrir una ventana de navegador/electron al iniciarse; se recomienda desactivarlo en servidores headless.
+- `server.webUIInterface` indica qué interfaz web debe lanzar Suwayomi al iniciarse; las opciones son `"browser"` y `"electron"`.
+- `server.electronPath` es la ruta al ejecutable principal de electron, y debe ir entre comillas dobles.
+- `server.webUIFlavor`: pon `"WebUI"` para que el servidor descargue y actualice Suwayomi-WebUI automáticamente, o `"Custom"` si quieres que el servidor sirva una interfaz web personalizada que gestiones tú mismo.
+  - Nota: "Custom" resulta útil si quieres probar versiones de vista previa de Suwayomi-WebUI, o si usas o desarrollas otras interfaces web como la versión web de Suwayomi-Sorayomi.
+- `server.webUIChannel` permite elegir qué canal de actualización usar (solo válido cuando flavor está en "WebUI"). Usa `"BUNDLED"` para usar la versión incluida en la descarga del servidor, `"STABLE"` para usar la última versión estable, o `"PREVIEW"` para usar la última versión de vista previa (puede tener errores).
+- `server.webUIUpdateCheckInterval` es el intervalo, en horas, con el que se comprueban las actualizaciones. Usa `0` para desactivar la comprobación de actualizaciones.
+- `server.webUISubpath` controla en qué subruta se sirve la interfaz; por defecto será accesible en `/` (es decir, directamente), pero con esta opción también puede aparecer, por ejemplo, en `/suwayomi`.
+
+
+### webView
+```
+server.kcefEnabled = true
+```
+- `server.kcefEnabled` controla si el proveedor de WebView KCEF está habilitado.
+
+
+### Descargador
+```
+server.downloadAsCbz = true
+server.downloadsPath = ""
+server.autoDownloadNewChapters = false
+server.excludeEntryWithUnreadChapters = true
+server.autoDownloadNewChaptersLimit = 0
+server.autoDownloadIgnoreReUploads = false
+server.downloadConversions = {}
+```
+- `server.downloadAsCbz = true` configura Suwayomi para comprimir automáticamente los capítulos en CBZ.
+- `server.downloadsPath = ""` es la ruta donde se almacenarán las descargas de manga; si el valor está vacío, se usará el directorio predeterminado `downloads` dentro del [directorio de datos](/es/docs/data-directory). En Windows, las barras invertidas `\` deben duplicarse (`\\`) o sustituirse por `/`.
+- `server.autoDownloadNewChapters = false` controla si Suwayomi debe descargar automáticamente los nuevos capítulos tras una actualización de la biblioteca.
+- `server.excludeEntryWithUnreadChapters = true` controla si Suwayomi descargará nuevos capítulos para títulos que tengan capítulos sin leer (requiere `server.autoDownloadNewChapters`).
+- `server.autoDownloadNewChaptersLimit = 0` establece cuántos capítulos se descargarán como máximo; usa `0` para desactivar el límite. Si se alcanza el límite, no se descargarán nuevos capítulos (requiere `server.autoDownloadNewChapters`).
+- `server.autoDownloadIgnoreReUploads = false` controla si Suwayomi volverá a descargar las re-subidas al actualizar (requiere `server.autoDownloadNewChapters`).
+- `server.downloadConversions = {}` configura conversiones de imagen opcionales para todas las descargas. Es un [objeto JSON](https://en.wikipedia.org/wiki/JSON#Syntax) donde la clave es el [tipo MIME](https://en.wikipedia.org/wiki/Media_type) de la imagen de origen, y el valor es un objeto con el tipo MIME o URL de destino y las opciones.
+  Las siguientes opciones son todas válidas:
+  ```
+  server.downloadConversions = { "image/webp" : { target : "image/jpeg", compressionLevel = 0.8 }}
+  # -- or --
+  server.downloadConversions."image/webp" = {
+    target = "image/jpeg"   # image type to convert to
+    compressionLevel = 0.8  # quality in range [0,1], leave away to use default compression
+  }
+  # -- a url example --
+  server.downloadConversions = { "default" : { target : "http://localhost:9999/convert" }}
+  # -- a url with all parameters example --
+  server.downloadConversions = { 
+      "default" : {
+          target : "http://localhost:9999/convert",
+          callTimeout : 10m,
+          connectTimeout : 10s,
+          headers : { 
+              "authorization" : "MyPassword"
+          }
+      }
+  }
+  ```
+  El tipo MIME de origen `default` puede usarse como alternativa para convertir todas las imágenes; un tipo MIME de destino `none` puede usarse para desactivar la conversión de un formato concreto.
+
+  Este es un ejemplo del comando curl que enviará Suwayomi-Server a la URL de conversión: `curl -X POST "http://localhost:9999/convert" -F "image=@cat.png;type=image/png"`
+- `server.serveConversions = {}` configura conversiones de imagen opcionales antes de servir la imagen al cliente. Sigue el mismo formato que `server.downloadConversions`.
+
+
+### Actualizador
+```
+server.excludeUnreadChapters = true
+server.excludeNotStarted = true
+server.excludeCompleted = true
+server.globalUpdateInterval = 12
+server.updateMangas = false
+```
+- `server.excludeUnreadChapters = true` controla si Suwayomi debe incluir en la actualización de la biblioteca los títulos con capítulos sin leer.
+- `server.excludeNotStarted = true` controla si Suwayomi debe incluir en la actualización de la biblioteca los títulos que aún no se han empezado a leer.
+- `server.excludeCompleted = true` controla si Suwayomi debe incluir en la actualización de la biblioteca los títulos marcados como completados.
+- `server.globalUpdateInterval = 12` establece, en horas, el intervalo de la actualización automática de la biblioteca; usa `0` para desactivarla. Rango: `6 <= n < ∞`
+- `server.updateMangas = false` controla si Suwayomi debe actualizar también los metadatos de los títulos junto con la obtención de nuevos capítulos en la actualización de la biblioteca.
+
+### Autenticación
+```
+server.authMode = "none" # none, basic_auth, simple_login or ui_login
+server.authUsername = "user"
+server.authPassword = "pass"
+server.jwtAudience = "suwayomi-server-api"
+server.jwtTokenExpiry = "5m"
+server.jwtRefreshExpiry = "60d"
+```
+- `server.authMode = "none"`: desde la v2.1.1867, Suwayomi admite dos modos de autenticación. Activar la autenticación es útil si lo alojas en una red pública o en internet. Si usabas las variables originales `server.basicAuth*`, se migrarán automáticamente.
+  - `basic_auth` configura Suwayomi para [autenticación de acceso básico](https://en.wikipedia.org/wiki/Basic_access_authentication).
+  - `simple_login` funciona de forma similar a la autenticación básica, pero presenta una página de inicio de sesión personalizada. El inicio de sesión se guarda mediante una cookie y debe renovarse en cada reinicio del servidor o cada 30 minutos.
+  - A partir de la v2.1.1894, hay disponible otro modo:
+    `ui_login` es un nuevo esquema de autenticación basado en [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token) que se integra estrechamente con la interfaz elegida. En lugar de restringir completamente el acceso, permite al usuario seguir abriendo la interfaz (por ejemplo, WebUI). A diferencia de los otros dos modos, la página de inicio de sesión puede personalizarse por completo desde la interfaz. Los ajustes `jwt*` se pueden usar para ajustar la duración de la sesión en este modo.
+- `server.authUsername` es el nombre de usuario que debes proporcionar al autenticarte.
+- `server.authPassword` es la contraseña que debes proporcionar al autenticarte.
+- `server.jwtAudience` es cualquier cadena que se incrusta en el token JWT. Consulta el campo `aud` en [JWT](https://en.wikipedia.org/wiki/JSON_Web_Token#Standard_fields).
+- `server.jwtTokenExpiry` es el tiempo durante el cual es válido cualquier token ("access token"); tras su expiración, se usará el refresh token para generar un nuevo access token sin volver a solicitar las credenciales.
+- `server.jwtRefreshExpiry` es el tiempo durante el cual es válido el refresh token. Una vez expirado, se pedirá al usuario que inicie sesión de nuevo; antes de eso, la sesión puede renovarse silenciosamente usando este token. Ten en cuenta la implicación de seguridad: mientras el access token sea válido, el servidor confía plenamente en quien lo posea. Una vez expirado el access token, el refresh token puede usarse para obtener uno nuevo; solo en ese momento el servidor puede finalizar la sesión.
+
+**Nota**: la autenticación de acceso básico envía el nombre de usuario y la contraseña en texto plano y no es completamente segura por HTTP; se recomienda combinar esta función con un servidor proxy inverso como nginx y exponer el servidor por HTTPS. De igual forma, con `simple_login` y `ui_login`, las credenciales se envían en texto plano al iniciar sesión, y la cookie/token se envía en cada solicitud. Además, tu navegador almacena en caché las credenciales/cookie, así que debes tener cuidado al acceder al servidor desde dispositivos que no sean privados y usar el modo incógnito.
+
+### Varios
+```
+server.debugLogsEnabled = false
+server.systemTrayEnabled = true
+server.maxLogFiles = 31
+server.maxLogFileSize = "10mb"
+server.maxLogFolderSize = "100mb"
+
+```
+- `server.debugLogsEnabled` controla si Suwayomi-Server debe mostrar más información al ejecutarse dentro de una ventana de terminal/CMD/PowerShell.
+- `server.systemTrayEnabled = true` indica si Suwayomi-Server debe mostrar un icono en la bandeja del sistema; se recomienda desactivarlo en servidores headless.
+- `server.maxLogFiles = 31` establece el número máximo de días que se conservan los archivos antes de eliminarse.
+- `server.maxLogFileSize = "10mb"` establece el tamaño máximo de un archivo de registro; los valores se indican como: 1 (bytes), 1KB (kilobytes), 1MB (megabytes), 1GB (gigabytes).
+- `server.maxLogFolderSize = "100mb"` establece el tamaño máximo de todos los archivos de registro guardados; los valores se indican igual que arriba.
+
+### Extensiones/fuentes
+```
+server.extensionStores = []
+server.maxSourcesInParallel = 6
+```
+- `server.extensionStores` es una lista de tiendas de extensiones (antes llamadas repositorios) para fuentes personalizadas. Usa el mismo formato que Mihon; cada entrada debe ser una URL en forma de cadena que apunte a un archivo JSON o PROTOBUF que represente el repositorio.
+- `server.maxSourcesInParallel = 6` establece cuántas fuentes pueden hacer solicitudes (actualizaciones, descargas) en paralelo. Las actualizaciones/descargas se agrupan por fuente, y todos los mangas de una fuente se actualizan/descargan de forma síncrona. Rango: `1 <= n <= 20`
+
+### Copia de seguridad
+```
+server.backupPath = ""
+server.backupTime = "00:00"
+server.backupInterval = 1
+server.backupTTL = 14
+server.autoBackupIncludeManga = true
+server.autoBackupIncludeCategories = true
+server.autoBackupIncludeChapters = true
+server.autoBackupIncludeTracking = true
+server.autoBackupIncludeHistory = true
+server.autoBackupIncludeClientData = true
+server.autoBackupIncludeServerSettings = true
+```
+- `server.backupPath = ""` es la ruta donde se almacenarán las copias de seguridad; si el valor está vacío, se usará el directorio predeterminado `backups` dentro del [directorio de datos](/es/docs/data-directory). En Windows, las barras invertidas `\` deben duplicarse (`\\`) o sustituirse por `/`.
+- `server.backupTime = "00:00"` establece la hora del día en la que se debe activar la copia de seguridad automática.
+- `server.backupInterval = 1` establece, en días, el intervalo con el que el servidor creará automáticamente una copia de seguridad; usa `0` para desactivarlo.
+- `server.backupTTL = 14` establece, en días, cuánto tiempo se conservarán los archivos de copia de seguridad antes de eliminarse; usa `0` para desactivarlo.
+- `server.autoBackupIncludeManga` indica si se incluyen los datos de manga en las copias de seguridad automáticas.
+- `server.autoBackupIncludeCategories` indica si se incluyen los datos de categorías en las copias de seguridad automáticas.
+- `server.autoBackupIncludeChapters` indica si se incluyen los datos de capítulos de manga en las copias de seguridad automáticas.
+- `server.autoBackupIncludeTracking` indica si se incluyen los datos de seguimiento de manga en las copias de seguridad automáticas.
+- `server.autoBackupIncludeHistory` indica si se incluye el historial de lectura de manga en las copias de seguridad automáticas.
+- `server.autoBackupIncludeClientData` indica si se incluyen los datos del cliente en las copias de seguridad automáticas.
+- `server.autoBackupIncludeServerSettings` indica si se incluye la configuración del servidor en las copias de seguridad automáticas.
+
+### Fuente local
+```
+server.localSourcePath = ""
+```
+- `server.localSourcePath = ""` es la ruta desde donde se carga el manga local; si el valor está vacío, se usará el directorio predeterminado `local` dentro del [directorio de datos](/es/docs/data-directory). En Windows, las barras invertidas `\` deben duplicarse (`\\`) o sustituirse por `/`.
+
+### Bypass de Cloudflare
+```
+server.flareSolverrEnabled = false
+server.flareSolverrUrl = "http://localhost:8191"
+server.flareSolverrTimeout = 60 # time in seconds
+server.flareSolverrSessionName = "suwayomi"
+server.flareSolverrSessionTtl = 15 # time in minutes
+server.flareSolverrAsResponseFallback = false
+```
+- `server.flareSolverrEnabled = false` controla si Suwayomi intenta conectarse a FlareSolverr cuando se detecta un desafío de CloudFlare.
+- `server.flareSolverrUrl = "http://localhost:8191"` establece la dirección donde Suwayomi intentará conectarse a FlareSolverr. La instancia debe estar en ejecución y ser accesible desde el servidor donde se ejecuta Suwayomi para que funcione el bypass de CloudFlare.
+- `server.flareSolverrTimeout = 60` establece, en segundos, el tiempo de espera para que FlareSolverr resuelva un desafío determinado.
+- `server.flareSolverrSessionName = "suwayomi"` establece el nombre de sesión que debe usar FlareSolverr, indicándole qué conjunto de cookies utilizar.
+- `server.flareSolverrSessionTtl = 15` establece, en minutos, cuánto tiempo vivirán las sesiones en FlareSolverr. Pasado ese tiempo, FlareSolverr olvidará las cookies.
+- `server.flareSolverrAsResponseFallback = false` permite a Suwayomi usar el contenido de la solicitud que recibió FlareSolverr en caso de que Suwayomi detecte un desafío de CloudFlare pero FlareSolverr no lo haga (lo que le impide resolverlo).
+
+**Nota:** Byparr es una alternativa popular a FlareSolverr. Usa el mismo esquema de API que FlareSolverr, así que también puedes configurar la dirección de una instancia de Byparr en `server.flareSolverrUrl`.
+
+**Nota:** el archivo [docker-compose.yml de ejemplo](https://github.com/Suwayomi/Suwayomi-Server-docker/blob/main/docker-compose.yml) contiene todo lo necesario para empezar a usar Suwayomi con Byparr.
+
+### OPDS
+```
+server.opdsUseBinaryFileSizes = false
+server.opdsItemsPerPage = 50
+server.opdsEnablePageReadProgress = true
+server.opdsMarkAsReadOnDownload = false
+server.opdsShowOnlyUnreadChapters = false
+server.opdsShowOnlyDownloadedChapters = false
+server.opdsChapterSortOrder = "DESC"
+server.opdsCbzMimetype = "MODERN"
+server.opdsSkipChapterMetadataFeed = false
+```
+- `server.opdsUseBinaryFileSizes = false` controla si Suwayomi debe mostrar los tamaños de archivo en unidades binarias (KiB, MiB, GiB) o decimales (KB, MB, GB) en los listados OPDS.
+- `server.opdsItemsPerPage = 50` establece el número de elementos por página en los listados OPDS. Rango: `10 <= n <= 5000`
+- `server.opdsEnablePageReadProgress = true` controla si Suwayomi debe incluir información para seguir el progreso de lectura de capítulos en los listados de páginas de OPDS. Esto hará que el lector marque las páginas como leídas al descargar las imágenes.
+- `server.opdsMarkAsReadOnDownload = false` controla si Suwayomi debe marcar los capítulos como leídos al descargarse a través del listado OPDS.
+- `server.opdsShowOnlyUnreadChapters = false` controla si los listados OPDS deben incluir únicamente los capítulos sin leer.
+- `server.opdsShowOnlyDownloadedChapters = false` controla si los listados OPDS deben incluir únicamente los capítulos descargados.
+- `server.opdsChapterSortOrder = "DESC"` establece el orden predeterminado de los capítulos en los listados OPDS, ya sea `"ASC"` o `"DESC"`.
+- `server.opdsCbzMimetype = "MODERN"` controla qué tipo MIME se usa para las descargas CBZ. Esto afecta tanto al enlace ofrecido en OPDS como al tipo de contenido de la descarga CBZ. Se permite MODERN (estándar IANA actual), LEGACY (tipo MIME obsoleto para .cbz) y COMPATIBLE (tipo MIME obsoleto para todos los archivos de cómic). Usa LEGACY o COMPATIBLE si los clientes antiguos no ofrecen la descarga del capítulo (ten en cuenta que el capítulo debe descargarse primero en Suwayomi antes de estar disponible en OPDS).
+- `server.opdsSkipChapterMetadataFeed = false` controla si se debe omitir el feed de metadatos. Si está activado, los enlaces de descarga y streaming se proporcionan directamente en la lista de capítulos, lo que mejora la compatibilidad con descargadores automatizados (como KOReader). Las estrategias de KoSync se aplican, pero los conflictos `PROMPT` se ignoran (dando prioridad al progreso local).
+
+### Sincronización con KOReader
+```
+server.koreaderSyncServerUrl = "https://sync.koreader.rocks/"
+server.koreaderSyncUsername = ""
+server.koreaderSyncUserkey = ""
+server.koreaderSyncDeviceId = ""
+server.koreaderSyncChecksumMethod = BINARY # BINARY or FILENAME
+server.koreaderSyncPercentageTolerance = 1.0E-15 # range: [1.0E-15, 1.0]
+server.koreaderSyncStrategyForward = PROMPT # PROMPT, KEEP_LOCAL, KEEP_REMOTE, DISABLED
+server.koreaderSyncStrategyBackward = DISABLED # PROMPT, KEEP_LOCAL, KEEP_REMOTE, DISABLED
+```
+- `server.koreaderSyncServerUrl` es la dirección donde se ejecuta el KOReader Sync Server. Se pueden usar servidores públicos (por ejemplo, `https://sync.koreader.rocks/`, `https://kosync.ak-team.com:3042/`) o instancias autoalojadas.
+- `server.koreaderSyncUsername` es el nombre de usuario con el que autenticarse en la instancia de KOReader.
+- `server.koreaderSyncUserkey` es la contraseña/clave con la que autenticarse en la instancia de KOReader.
+- `server.koreaderSyncDeviceId` es un identificador único para identificar Suwayomi en el KOReader Sync Server. Déjalo en blanco para generarlo automáticamente.
+- `server.koreaderSyncChecksumMethod` es el método usado para identificar capítulos en el KOReader Sync Server. BINARY incluye todo el contenido del capítulo, por lo que es más costoso, pero puede resultar útil para detectar capítulos actualizados.
+- `server.koreaderSyncPercentageTolerance` indica, al sincronizar el progreso de lectura de un capítulo desde otros dispositivos, cuánta diferencia (absoluta) puede ignorarse. Por encima de esta tolerancia, el progreso de lectura de Suwayomi se sustituirá por el del dispositivo remoto según la estrategia especificada. La estrategia se elige entre `server.koreaderSyncStrategyForward` y `server.koreaderSyncStrategyBackward` según las marcas de tiempo de la última lectura.
+- `server.koreaderSyncStrategyForward` es la estrategia a aplicar cuando el progreso remoto es más reciente que el local.
+- `server.koreaderSyncStrategyBackward` es la estrategia a aplicar cuando el progreso remoto es más antiguo que el local.
+
+### Base de datos
+```
+server.databaseType = H2 # H2, POSTGRESQL
+server.databaseUrl = "postgresql://localhost:5432/suwayomi"
+server.databaseUsername = ""
+server.databasePassword = ""
+server.useHikariConnectionPool = true
+```
+- `server.databaseType` elige qué tipo de base de datos usar. [H2](https://en.wikipedia.org/wiki/H2_Database_Engine) es la opción predeterminada; es una base de datos sencilla basada en archivos para aplicaciones Java. Como se basa únicamente en archivos sin un proceso de servidor, la corrupción de archivos puede ser habitual si el servidor no se cierra correctamente. [PostgreSQL](https://en.wikipedia.org/wiki/PostgreSQL) es una base de datos multiplataforma popular y estable. Para usar PostgreSQL, necesitas ejecutar tú mismo una instancia.
+- `server.databaseUrl` es la URL donde encontrar el servidor de PostgreSQL, incluyendo el nombre de la base de datos.
+- `server.databaseUsername` es el nombre de usuario con el que autenticarse en la instancia de PostgreSQL.
+- `server.databasePassword` es la contraseña con la que autenticarse en la instancia de PostgreSQL.
+- `server.useHikariConnectionPool` indica si se usa Hikari Connection Pool para conectarse a la base de datos.
+
+### SyncYomi
+```
+server.syncYomiEnabled = false
+server.syncYomiHost = ""
+server.syncYomiApiKey = ""
+server.syncDataManga = true
+server.syncDataChapters = true
+server.syncDataTracking = true
+server.syncDataHistory = true
+server.syncDataCategories = true
+server.syncInterval = "0s"
+```
+- `server.syncYomiEnabled` controla si SyncYomi está activado.
+- `server.syncYomiHost` es la URL base de la instancia del servidor SyncYomi. Por ejemplo: `http://localhost:8282`
+- `server.syncYomiApiKey` es la clave de API para autenticarse con SyncYomi. Debes usar la misma clave de API tanto en Suwayomi como en SyncYomi.
+- `server.syncDataManga` activa la sincronización de manga.
+- `server.syncDataChapters` activa la sincronización de capítulos.
+- `server.syncDataTracking` activa la sincronización de datos de seguimiento.
+- `server.syncDataHistory` activa la sincronización del historial de lectura.
+- `server.syncDataCategories` activa la sincronización de categorías.
+- `server.syncInterval` es el intervalo entre operaciones de sincronización automática. Usa `0s` para desactivarlo.
+
+**Nota:** el archivo [docker-compose.yml de ejemplo](https://github.com/Suwayomi/Suwayomi-Server-docker/blob/main/docker-compose.yml) contiene todo lo necesario para empezar a usar Suwayomi con PostgreSQL. Ten en cuenta que la compatibilidad con PostgreSQL aún está en fase beta.
+
+**Nota:** estos ajustes se excluyen de las copias de seguridad, por lo que una copia de seguridad puede usarse para cambiar fácilmente de instalación de base de datos configurando primero la conexión y luego restaurando la copia de seguridad.
+
+## Sobrescribir las opciones de configuración con argumentos de línea de comandos
+Puedes sobrescribir las opciones de configuración anteriores mediante argumentos de línea de comandos.
+Normalmente solo necesitas configurar esto si usas instalaciones personalizadas, como una versión portátil de Suwayomi, o si tu directorio de usuario no se puede escribir o tu administrador del sistema no lo permite.
+
+Usa el siguiente patrón.
+```
+java -Dsuwayomi.tachidesk.config.<configuration option 1>=<configuration value 1> -Dsuwayomi.tachidesk.config.<configuration option 2>=<configuration value 2> ... -Dsuwayomi.tachidesk.config.<configuration option N>=<configuration value N> -jar <path to server jar>
+```
+por ejemplo, para forzar el inicio de Suwayomi-Server en electron, tendrías algo como:
+```
+java -Dsuwayomi.tachidesk.config.server.webUIInterface=electron -Dsuwayomi.tachidesk.config.server.electronPath="/path/to/electron" -jar Suwayomi-Server-v0.X.Y-rXXXX.jar
+```
+
+**Nota:** puedes incluir el comando anterior en un script de lanzamiento personalizado, como los que se encuentran [aquí](https://github.com/Suwayomi/Suwayomi-Server/tree/master/scripts/resources).
+
+## Sobrescribir la ruta del directorio de datos de Suwayomi-Server
+La única forma posible de sobrescribir la ruta predeterminada del directorio de datos es mediante argumentos de línea de comandos (¡el clásico problema del huevo y la gallina!).
+Añade la opción de configuración especial `server.rootDir="<path to data directory>"` a tus argumentos de línea de comandos.
+
+Por ejemplo:
+```
+java -Dsuwayomi.tachidesk.config.server.rootDir="/path/to/data/directory" -jar Suwayomi-Server-v0.X.Y-rXXXX.jar
+```

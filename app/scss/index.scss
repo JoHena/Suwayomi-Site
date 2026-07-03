@@ -66,6 +66,24 @@
                 color: var(--paper);
             }
         }
+
+        .landing-header__locale {
+            font-family: var(--font-mono), monospace;
+            font-size: 0.75rem;
+            letter-spacing: 0.04em;
+
+            &.landing-header__locale--active {
+                color: var(--teal);
+            }
+        }
+    }
+
+    &__locales {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding-left: clamp(0.75rem, 2vw, 1.25rem);
+        border-left: 1px solid rgba(238, 240, 244, 0.2);
     }
 }
 

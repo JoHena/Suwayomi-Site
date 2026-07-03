@@ -1,0 +1,14 @@
+---
+title: 拡張機能の入手
+---
+
+# 拡張機能の入手
+
+1. **最新版(またはプレビュー版)をインストール:** https://github.com/Suwayomi/Suwayomi-Server/releases/latest
+2. 拡張機能のリポジトリを探します。現在デフォルトの拡張機能はないため、Google などで Tachiyomi 拡張機能リポジトリを探す必要があります。
+   - 注: リポジトリは `https://raw.githubusercontent.com/user/reponame` または `https://www.github.com/user/reponame` のような形式です。
+3. 次のいずれかの方法で設定します。
+   - Suwayomi-Server オプション1: **新しいランチャー**で `Extensions` タブを開き、拡張機能リポジトリを追加します。
+   - Suwayomi-Server オプション2: **WebUI** の**サーバー設定**で拡張機能リポジトリを追加します。
+   - Suwayomi-Server オプション3: データディレクトリ内の `server.conf` ファイルを開き、拡張機能リポジトリを追加します。詳細は[設定](/ja/docs/configuration)を参照してください。
+   - Suwayomi docker コンテナ: `EXTENSION_REPOS` 環境変数を編集し、コンテナの README に記載された形式で拡張機能リポジトリを追加します。

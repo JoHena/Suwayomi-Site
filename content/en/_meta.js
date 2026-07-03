@@ -7,12 +7,5 @@ export default {
     type: 'page',
     title: 'Online WebUI Preview',
     href: 'https://suwayomi-webui-preview.github.io/'
-  },
-
-  'tachiyomi-extension': {
-    display: 'hidden'
-  },
-  'tracker-oauth': {
-    display: 'hidden'
   }
 }

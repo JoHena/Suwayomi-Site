@@ -1,0 +1,94 @@
+---
+title: トラブルシューティング
+---
+
+import { Callout } from 'nextra/components'
+
+# トラブルシューティング
+
+このページはいくつかのセクションに分かれており、各セクションで特定の問題とその解決策を説明しています。
+
+最後には「全般」セクションがあり、他の方法がすべてうまくいかない場合の最終手段が書かれています。
+
+さらにサポートが必要な場合は、[公式 Suwayomi Discord サーバー](https://discord.gg/DDZdqZWaHA)にアクセスしてください。
+その際は、ログを準備しておくと役立ちます。ログは[データディレクトリ](/ja/docs/data-directory)内の logs ディレクトリにあります。
+
+**以下の手順はすべて、Suwayomi を停止していることを前提としています**。
+
+## データベースが壊れている
+
+- `failed due to
+org.jetbrains.exposed.exceptions.ExposedSQLException: org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "CATEGORY.SORT_ORDER" not found`
+- `org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "CHAPTER.KOREADER_HASH" not found`
+- `java.lang.IllegalStateException: Unable to read the page at position 96170708817765466`
+- 「SQL Statement」を含むその他のエラーテキスト
+
+データベースが破損しているか、互換性がありません。
+
+原因は次のいずれかです。
+- プレビュー版を実行していて、安定版にダウングレードした。
+- Suwayomi を正しくシャットダウンしなかった。
+- Suwayomi が予期せずクラッシュした。
+
+解決策:
+- ダウングレードした場合は、再度プレビュー版にアップグレードしてください。
+- それ以外の場合は、リセットしてバックアップから復元する必要があります。下記の[全般的なトラブルシューティング](#全般的なトラブルシューティング)を参照してください。
+
+## `HTTP error 429`
+
+ソース(トラッカーが有効な場合はトラッカーも)が、リクエストの送りすぎによりブロックしています。
+大量移行(Mass-Migration)を行うと、ソースや設定済みのトラッカーへのリクエスト数が予想以上に多くなることがあります。
+
+解決策: 別のソース・より多くのソースを使う、ダウンロード量を減らす、リクエストの多い操作の間隔を空ける、などを試してください。
+
+## 拡張機能がタイムアウトする
+
+- `Timed out waiting for 20000 ms…`
+- `Timed out waiting for page list`
+
+まず、これが拡張機能の問題なのか Suwayomi 側の問題なのかを確認してください。
+問題のあるマンガのページで「Open in WebView」をクリックします。
+
+解決策:
+- WebView が読み込まれる場合: 問題は拡張機能側にあります。その拡張機能に既知の問題がないか、[issue 一覧](https://github.com/Suwayomi/Suwayomi-Server/issues)や Discord を検索してください。
+- WebView がエラーになる場合: [データディレクトリ](/ja/docs/data-directory)にある `bin` と `cache` フォルダを削除してください。
+    - 再起動しても WebView が動作しない場合、インストールが不完全である可能性があります。Linux では [README](https://github.com/Suwayomi/Suwayomi-Server#webview-support-gnulinux) を参照してください。
+
+## Flaresolverr が必要
+
+- `java.io.IOException: Cloudflare bypass currently disabled`
+
+使用しているソースで CloudFlare のボット対策が有効になっています。
+ブラウザでソースの Web サイトを開くと、「Confirm I'm human」ページが表示されるはずです。
+
+解決策:
+- [Flaresolverr](https://github.com/FlareSolverr/FlareSolverr) または [Byparr](https://github.com/ThePhaseless/Byparr) をダウンロードしてセットアップしてください。このソースを使用する際は、必ず Flaresolverr/Byparr を実行しておいてください。
+
+## Flaresolverr が起動していない
+
+- `java.io.IOException: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:8191`
+
+`server.flareSolverrEnabled` を有効にして Flaresolverr を設定していますが、Flaresolverr がインストールされていない、または起動していません。
+
+解決策:
+- まだの場合は Flaresolverr をインストールしてください(前のセクションを参照)。その上で、起動していることを確認してください(Windows: コンソールウィンドウを閉じないでください!)。
+- 起動している場合は、`server.flareSolverrUrl` に設定した URL が正しいか確認してください。通常は変更する必要はありません。
+- 起動していて URL も正しい場合は、ファイアウォールの設定を確認してください。システムが Flaresolverr へのアクセスをブロックしている可能性があります。
+
+## 全般的なトラブルシューティング
+
+このガイドでは、Suwayomi をクリーンインストール状態にリセットして問題の解決を試みます。
+
+<Callout type="warning">
+  この操作を行うと、ライブラリを含むすべてのデータが削除されます。
+  上記の手順でバックアップをコピーしてあることを必ず確認してください!
+</Callout>
+
+- ライブラリの最近のバックアップがあることを確認するか、可能であればアプリ内でバックアップを作成してください。これから **Suwayomi のすべてのデータを消去します**。
+- Suwayomi が実行されていないことを確認してください(トレイアイコンを右クリックして終了するか、お使いの OS が提供する方法でプロセスを終了してください)。
+- ブラウザから Suwayomi を利用している場合は、ブラウザの閲覧データをすべて消去してください。
+- 以下にある Suwayomi のデータディレクトリを削除して、アプリを再度実行してください。データディレクトリの見つけ方は[データディレクトリ](/ja/docs/data-directory)を参照してください。
+    - ダウンロード済みのデータを残しておきたい場合は、一部のファイルのみを削除することもできます。`database.mv.db`、`database.trace.db`、`bin`、`cache`、`extensions`、`settings`、`webUI` を削除する必要があります。これらの一部のみを削除しても、問題が解決しないことがあります。
+- Suwayomi を開き、Settings > Backup > Restore Backup に移動して、最新のバックアップを選択してください。
+    - バックアップの復元では、ダウンロード済みのデータは復元されません。前の手順でダウンロードデータを残していた場合、すべてのマンガを再ダウンロードする必要があります。ただし、Suwayomi は既存のファイルを認識するため、新しくないものは実際にはダウンロードしません。
+- この修正を定期的に行う必要がある場合や、問題が解決しない・この方法が効かない場合は、issue を作成するか [Suwayomi Discord サーバー](https://discord.gg/DDZdqZWaHA)に参加してコミュニティと交流し、サポートを受けてください。

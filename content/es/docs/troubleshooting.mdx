@@ -1,0 +1,94 @@
+---
+title: Solución de problemas
+---
+
+import { Callout } from 'nextra/components'
+
+# Solución de problemas
+
+Esta página está organizada en varias secciones; cada una describe un problema concreto seguido de una o más soluciones posibles.
+
+Al final encontrarás una sección General, que es la opción nuclear si nada más funciona.
+
+Para más ayuda, visita el [servidor oficial de Discord de Suwayomi](https://discord.gg/DDZdqZWaHA).
+En esos casos te será útil tener a mano los registros. Puedes encontrarlos en el [directorio de datos](/es/docs/data-directory), dentro del directorio de logs.
+
+**Todos los pasos siguientes suponen que has detenido Suwayomi**.
+
+## Base de datos dañada
+
+- `failed due to
+org.jetbrains.exposed.exceptions.ExposedSQLException: org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "CATEGORY.SORT_ORDER" not found`
+- `org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "CHAPTER.KOREADER_HASH" not found`
+- `java.lang.IllegalStateException: Unable to read the page at position 96170708817765466`
+- Cualquier otro texto de error que incluya "SQL Statement"
+
+Tu base de datos está dañada o es incompatible.
+
+La causa es una de las siguientes:
+- Estabas ejecutando una versión de vista previa y decidiste volver a la versión estable.
+- No cerraste Suwayomi correctamente.
+- Suwayomi se bloqueó de forma inesperada.
+
+Soluciones:
+- Si hiciste un downgrade, vuelve a actualizar a la versión de vista previa.
+- De lo contrario, tendrás que restablecer y restaurar desde una copia de seguridad. Consulta [Solución de problemas general](#solución-de-problemas-general) más abajo.
+
+## `HTTP error 429`
+
+La fuente (o, si los trackers están habilitados, posiblemente el tracker) te ha bloqueado por enviar demasiadas solicitudes.
+Ten en cuenta que la migración masiva puede generar un número inesperadamente alto de solicitudes tanto a la fuente como a los trackers configurados.
+
+Solución: usa otras fuentes o más fuentes, descarga menos y espera entre acciones que generen muchas solicitudes.
+
+## Una extensión da tiempo de espera agotado
+
+- `Timed out waiting for 20000 ms…`
+- `Timed out waiting for page list`
+
+Primero comprueba si se trata de un problema de la extensión o de Suwayomi.
+En la página del manga problemático, haz clic en "Open in WebView".
+
+Soluciones:
+- Si el WebView carga: el problema está en la extensión. Busca en [los issues](https://github.com/Suwayomi/Suwayomi-Server/issues) y en Discord si hay problemas conocidos con esa extensión.
+- Si el WebView da error: ve al [directorio de datos](/es/docs/data-directory) y elimina las carpetas `bin` y `cache`.
+    - Si el WebView sigue sin funcionar después de reiniciar, tu instalación está incompleta. En Linux, consulta el [README](https://github.com/Suwayomi/Suwayomi-Server#webview-support-gnulinux).
+
+## Se requiere Flaresolverr
+
+- `java.io.IOException: Cloudflare bypass currently disabled`
+
+La fuente que estás usando ha activado la protección antibots de CloudFlare.
+Si abres el sitio web de la fuente en tu navegador, deberías ver la página "Confirm I'm human".
+
+Solución:
+- Descarga y configura [Flaresolverr](https://github.com/FlareSolverr/FlareSolverr) o [Byparr](https://github.com/ThePhaseless/Byparr). Asegúrate de ejecutar Flaresolverr/Byparr cada vez que uses esta fuente.
+
+## Flaresolverr no está en ejecución
+
+- `java.io.IOException: Failed to connect to localhost/[0:0:0:0:0:0:0:1]:8191`
+
+Has configurado Flaresolverr activando la opción `server.flareSolverrEnabled`, pero Flaresolverr no está instalado o no está en ejecución.
+
+Soluciones:
+- Instala Flaresolverr si aún no lo has hecho (consulta la sección anterior). Luego asegúrate de que esté en ejecución (Windows: ¡no cierres la ventana de la consola!).
+- Si está en ejecución, comprueba que la URL configurada en `server.flareSolverrUrl` sea correcta. Normalmente no hace falta cambiarla.
+- Si está en ejecución y la URL es correcta, revisa la configuración de tu cortafuegos; tu sistema podría estar bloqueando el acceso a Flaresolverr.
+
+## Solución de problemas general
+
+Esta guía intentará arreglar Suwayomi restableciéndolo a un estado de instalación limpio.
+
+<Callout type="warning">
+  Esto eliminará todos tus datos, incluida la biblioteca.
+  ¡Asegúrate de haber copiado tus copias de seguridad como se describe más arriba!
+</Callout>
+
+- Asegúrate de tener una copia de seguridad reciente de tu biblioteca, o crea una en la aplicación si es posible, porque **vamos a borrar todos los datos de Suwayomi**.
+- Asegúrate de que Suwayomi no esté en ejecución (haz clic derecho en el icono de la bandeja del sistema y ciérralo, o finaliza el proceso mediante el método que ofrezca tu sistema operativo).
+- Borra todos los datos de navegación de tu navegador si usas Suwayomi desde uno.
+- Elimina el directorio de datos de Suwayomi que se indica más abajo y vuelve a ejecutar la aplicación. Consulta el artículo [El directorio de datos](/es/docs/data-directory) para saber cómo encontrarlo.
+    - Si quieres conservar tus descargas, también puedes intentar eliminar solo algunas partes de forma selectiva. Tendrás que eliminar `database.mv.db`, `database.trace.db`, `bin`, `cache`, `extensions`, `settings`, `webUI`. Eliminar solo un subconjunto de estos archivos y carpetas puede no resolver el problema.
+- Abre Suwayomi y ve a Settings > Backup > Restore Backup, y selecciona la copia de seguridad más reciente que tengas.
+    - Restaurar desde una copia de seguridad no restaura tus descargas. Si decidiste conservarlas en el paso anterior, ahora tendrás que volver a descargar todo el manga. Suwayomi detectará los archivos existentes y no descargará realmente nada que no sea nuevo.
+- Si tienes que realizar esta solución periódicamente, el problema persiste o el método no funcionó, abre un issue o únete al [servidor de Discord de Suwayomi](https://discord.gg/DDZdqZWaHA) para hablar con la comunidad y recibir ayuda y soporte.

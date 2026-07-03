@@ -1,0 +1,25 @@
+---
+title: Directorio de datos
+---
+
+# El directorio de datos
+
+## Directorio de datos predeterminado
+
+El directorio de datos predeterminado se encuentra en la siguiente ubicación según tu sistema operativo:
+
+Sustituye `<Account>` por tu cuenta/nombre de usuario.
+
+En Windows 7 y posteriores: `C:\Users\<Account>\AppData\Local\Tachidesk`
+
+En Windows XP: `C:\Documents and Settings\<Account>\Application Data\Local Settings\Tachidesk`
+
+En Mac OS X: `/Users/<Account>/Library/Application Support/Tachidesk`
+
+En Unix/Linux: `/home/<account>/.local/share/Tachidesk`
+
+## Personalizado
+
+Puedes configurar Suwayomi-Server para que use un directorio específico con el argumento de inicio `-Dsuwayomi.tachidesk.config.server.rootDir`.
+
+Un ejemplo de esto sería: `java -Dsuwayomi.tachidesk.config.server.rootDir="D:\Tachidesk Data" -jar Tachidesk-vX.Y.Z-rxxxx.jar`

@@ -10,7 +10,7 @@ import { Callout } from 'nextra/components'
   This document describes the settings available in the preview version. Please head to [v2.2.2100](https://github.com/Suwayomi/Suwayomi-Server/blob/v2.2.2100/docs/Configuring-Suwayomi%E2%80%90Server.md) for the current stable version
 </Callout>
 
-Suwayomi-Server configuration file is named `server.conf` and is located inside [the data directory](/docs/data-directory).
+Suwayomi-Server configuration file is named `server.conf` and is located inside [the data directory](/en/docs/data-directory).
 
 The configuration file is written in HOCON. Google is your friend if you want to know more.
 
@@ -95,7 +95,7 @@ server.autoDownloadIgnoreReUploads = false
 server.downloadConversions = {}
 ```
 - `server.downloadAsCbz = true` configures Suwayomi to automatically compress chapters into CBZ.
-- `server.downloadsPath = ""` the path where manga downloads will be stored, if the value is empty, the default directory `downloads` inside [the data directory](/docs/data-directory) will be used. If you are on Windows the slashes `\` needs to be doubled(`\\`) or replaced with `/`
+- `server.downloadsPath = ""` the path where manga downloads will be stored, if the value is empty, the default directory `downloads` inside [the data directory](/en/docs/data-directory) will be used. If you are on Windows the slashes `\` needs to be doubled(`\\`) or replaced with `/`
 - `server.autoDownloadNewChapters = false` controls if Suwayomi should automatically download new chapters after a library update.
 - `server.excludeEntryWithUnreadChapters = true` controls if Suwayomi will download new chapters for titles with unread chapters (requires `server.autoDownloadNewChapters`).
 - `server.autoDownloadNewChaptersLimit = 0` sets how many chapters should be downloaded at most, `0` to disable the limit; if the limit is reached, new chapters will not be downloaded (requires `server.autoDownloadNewChapters`).
@@ -202,7 +202,7 @@ server.autoBackupIncludeHistory = true
 server.autoBackupIncludeClientData = true
 server.autoBackupIncludeServerSettings = true
 ```
-- `server.backupPath = ""` the path where backups will be stored, if the value is empty, the default directory `backups` inside [the data directory](/docs/data-directory) will be used. If you are on Windows the slashes `\` needs to be doubled(`\\`) or replaced with `/`
+- `server.backupPath = ""` the path where backups will be stored, if the value is empty, the default directory `backups` inside [the data directory](/en/docs/data-directory) will be used. If you are on Windows the slashes `\` needs to be doubled(`\\`) or replaced with `/`
 - `server.backupTime = "00:00"` sets the time of day at which the automated backup should be triggered.
 - `server.backupInterval = 1` sets the interval in which the server will automatically create a backup in days, `0` to disable it.
 - `server.backupTTL = 14` sets how long backup files will be kept before they will get deleted in days, `0` to disable it.
@@ -218,7 +218,7 @@ server.autoBackupIncludeServerSettings = true
 ```
 server.localSourcePath = ""
 ```
-- `server.localSourcePath = ""` the path from where local manga are loaded, if the value is empty, the default directory `local` inside [the data directory](/docs/data-directory) will be used. If you are on Windows the slashes `\` needs to be doubled(`\\`) or replaced with `/`
+- `server.localSourcePath = ""` the path from where local manga are loaded, if the value is empty, the default directory `local` inside [the data directory](/en/docs/data-directory) will be used. If you are on Windows the slashes `\` needs to be doubled(`\\`) or replaced with `/`
 
 ### Cloudflare bypass
 ```

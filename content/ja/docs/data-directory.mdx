@@ -1,0 +1,25 @@
+---
+title: データディレクトリ
+---
+
+# データディレクトリ
+
+## デフォルトのデータディレクトリ
+
+デフォルトのデータディレクトリは、お使いのオペレーティングシステムによって以下のようになります。
+
+`<Account>` はご自身のアカウント名/ユーザー名に置き換えてください。
+
+Windows 7 以降: `C:\Users\<Account>\AppData\Local\Tachidesk`
+
+Windows XP: `C:\Documents and Settings\<Account>\Application Data\Local Settings\Tachidesk`
+
+Mac OS X: `/Users/<Account>/Library/Application Support/Tachidesk`
+
+Unix/Linux: `/home/<account>/.local/share/Tachidesk`
+
+## カスタム設定
+
+`-Dsuwayomi.tachidesk.config.server.rootDir` 起動引数を使うことで、Suwayomi-Server に特定のディレクトリを使わせることができます。
+
+例: `java -Dsuwayomi.tachidesk.config.server.rootDir="D:\Tachidesk Data" -jar Tachidesk-vX.Y.Z-rxxxx.jar`

@@ -1,0 +1,85 @@
+---
+title: Clientes
+---
+
+import { ClientCard } from '../../../components/ClientCard'
+import { ClientIcon } from '../../../components/ClientIcon'
+import styles from '../../../app/scss/clients.module.scss'
+
+# Clientes
+
+Suwayomi-Server no tiene interfaz propia — necesitas una aplicación cliente como frontend. Si [descargas Suwayomi-Server directamente](https://github.com/Suwayomi/Suwayomi-Server/releases/latest), obtienes una copia incluida de [Suwayomi-WebUI](https://github.com/Suwayomi/Suwayomi-WebUI), por lo que la mayoría de las personas no necesitan instalar un cliente aparte para empezar.
+
+Aquí tienes una lista de los clientes/interfaces de usuario conocidos para Suwayomi-Server. Consulta el repositorio de cada proyecto para ver sus funciones actuales.
+
+## Clientes integrados
+
+Son opciones incorporadas, y el servidor puede mantenerlas actualizadas automáticamente.
+
+<div className={styles.grid}>
+  <ClientCard
+    icon={<ClientIcon label="WU" color="#d33d24" />}
+    title="Suwayomi-WebUI"
+    href="https://github.com/Suwayomi/Suwayomi-WebUI"
+  >
+    Aplicación web, PWA
+  </ClientCard>
+  <ClientCard
+    icon={<ClientIcon label="VU" color="#3b6ea5" />}
+    title="Suwayomi-VUI"
+    href="https://github.com/Suwayomi/Suwayomi-VUI"
+  >
+    Aplicación web, PWA
+  </ClientCard>
+</div>
+
+## Otros clientes (posiblemente inactivos o abandonados)
+
+Son aplicaciones independientes que se conectan a una instancia de Suwayomi-Server que ya tienes en ejecución; algunas también pueden administrar su propia instancia del servidor.
+
+<div className={styles.grid}>
+  <ClientCard
+    icon={<ClientIcon label="VA" color="#8a4fae" />}
+    title="Tachidesk-VaadinUI"
+    href="https://github.com/Suwayomi/Tachidesk-VaadinUI"
+  >
+    Escritorio (Windows, Linux, macOS) — interfaz en el navegador, administra su propia instancia del servidor
+  </ClientCard>
+  <ClientCard
+    icon={<ClientIcon label="MK" color="#c1852b" />}
+    title="Moku"
+    href="https://github.com/Youwes09/Moku"
+  >
+    Escritorio (Windows, Linux, macOS) — puede administrar su propia instancia del servidor
+  </ClientCard>
+  <ClientCard
+    icon={<ClientIcon label="JU" color="#2f7d6b" />}
+    title="Tachidesk-JUI"
+    href="https://github.com/Suwayomi/Tachidesk-JUI"
+  >
+    Escritorio (Windows, Linux, macOS) — puede administrar su propia instancia del servidor
+  </ClientCard>
+  <ClientCard
+    icon={<ClientIcon label="SY" color="#b3506b" />}
+    title="Tachidesk-Sorayomi"
+    href="https://github.com/Suwayomi/Tachidesk-Sorayomi"
+  >
+    Web, escritorio (Windows, Linux, macOS), Android — requiere un servidor en ejecución
+  </ClientCard>
+  <ClientCard
+    icon={<ClientIcon label="QT" color="#4f7942" />}
+    title="Tachidesk-qtui"
+    href="https://github.com/Suwayomi/Tachidesk-qtui"
+  >
+    Android, iOS, escritorio (Linux) — requiere un servidor en ejecución
+  </ClientCard>
+  <ClientCard
+    icon={<ClientIcon label="KO" color="#5a5f6b" />}
+    title="Suwayomi Client for KOReader"
+    href="https://github.com/LK4D4/suwayomi.koplugin"
+  >
+    Complemento de KOReader — funciona en cualquier lugar donde funcione KOReader (Android, Kindle, Kobo, etc.), requiere un servidor en ejecución
+  </ClientCard>
+</div>
+
+Para la lista más actualizada, consulta el [README de Suwayomi-Server](https://github.com/Suwayomi/Suwayomi-Server#suwayomi-client-projects) — aparecen nuevos clientes de vez en cuando y esta página puede no estar siempre al día.

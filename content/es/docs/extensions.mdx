@@ -1,0 +1,14 @@
+---
+title: Obtener extensiones
+---
+
+# Obtener extensiones
+
+1. **Instala la última versión (o la vista previa):** https://github.com/Suwayomi/Suwayomi-Server/releases/latest
+2. Busca un repositorio de extensiones. Actualmente no hay extensiones predeterminadas, así que tendrás que buscar en Google un repositorio de extensiones de Tachiyomi.
+   - Nota: el repositorio debería tener un aspecto como `https://raw.githubusercontent.com/user/reponame` o `https://www.github.com/user/reponame`
+3. Configúralo usando una de las siguientes opciones:
+   - Suwayomi-Server, opción 1: en el **nuevo lanzador**, ve a la pestaña `Extensions` y añade el repositorio de extensiones.
+   - Suwayomi-Server, opción 2: usa la **configuración del servidor** en **WebUI** para añadir el repositorio de extensiones.
+   - Suwayomi-Server, opción 3: abre el archivo `server.conf` en los archivos de datos y añade el repositorio de extensiones. Consulta [Configuración](/es/docs/configuration) para más detalles.
+   - Contenedor Docker de Suwayomi: edita la variable de entorno `EXTENSION_REPOS` y añade el repositorio de extensiones con el formato indicado en el README del contenedor.

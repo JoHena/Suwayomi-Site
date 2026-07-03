@@ -1,0 +1,37 @@
+---
+title: FAQ
+---
+
+# Frequently Asked Questions
+
+### What is Suwayomi?
+
+Suwayomi-Server is a free and open source manga reader server that runs extensions built for [Mihon (Tachiyomi)](https://mihon.app/). It's an independent Mihon (Tachiyomi)-compatible project — not a fork of Mihon (Tachiyomi) — that runs on your computer or a server you control, and any Mihon (Tachiyomi) extension works with it out of the box.
+
+### Do I need to install a separate client app?
+
+Not necessarily. Downloading Suwayomi-Server directly already includes a bundled copy of [Suwayomi-WebUI](https://github.com/Suwayomi/Suwayomi-WebUI), so you can start reading right away. If you'd rather use a different interface — a native desktop/mobile app, for example — see [Clients](/en/docs/clients) for the full list.
+
+### Where do I get manga sources/extensions?
+
+There are no extensions bundled by default — you point Suwayomi-Server at a Mihon (Tachiyomi)-compatible extension repository and it installs sources from there. See [Getting Extensions](/en/docs/extensions) for the steps.
+
+### Where is my library/config/logs stored?
+
+Everything lives in Suwayomi's data directory, which differs by OS. See [The Data Directory](/en/docs/data-directory) for exact paths, and [Configuration](/en/docs/configuration) if you want to move it.
+
+### Can I use Suwayomi together with Mihon (Tachiyomi)?
+
+Yes. You can install the `Suwayomi` extension inside Mihon (Tachiyomi) (and forks) to browse your Suwayomi library, and enable the Suwayomi tracker to keep reading progress in sync between the two.
+
+### Can I access my Suwayomi-Server from another device or over the internet?
+
+Yes — Suwayomi-Server is designed to run remotely. Connect to it from any of the [clients](/en/docs/clients), or open the bundled WebUI in a browser, pointed at the server's address. Exposing it outside your local network requires your own networking/port-forwarding/reverse-proxy setup, and enabling authentication in [Configuration](/en/docs/configuration) is strongly recommended if you do.
+
+### Is Suwayomi affiliated with Tachiyomi/Mihon, or with any manga sites?
+
+No. Suwayomi is Mihon (Tachiyomi)-compatible software but is developed independently, and it isn't affiliated with the content providers accessible through extensions.
+
+### Something isn't working — where do I get help?
+
+Start with [Troubleshooting](/en/docs/troubleshooting), which covers the most common issues (broken databases, extension timeouts, Cloudflare challenges, and a full reset guide). If that doesn't resolve it, ask in the [Suwayomi Discord server](https://discord.gg/DDZdqZWaHA) or check [the GitHub issues](https://github.com/Suwayomi/Suwayomi-Server/issues) — have your logs handy from the data directory.
